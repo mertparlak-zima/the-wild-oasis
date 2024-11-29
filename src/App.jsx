@@ -1,5 +1,12 @@
+import GloablStyles from "./styles/GlobalStyles";
+
 function App() {
-  return <div>sa</div>;
+  return (
+    <>
+      <GloablStyles />
+      <div></div>
+    </>
+  );
 }
 
 export default App;
