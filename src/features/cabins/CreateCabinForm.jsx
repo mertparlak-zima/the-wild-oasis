@@ -7,6 +7,7 @@ import FormRow from "../../ui/FormRow";
 import { useForm } from "react-hook-form";
 import { useCreateCabin } from "../../hooks/useCreateCabin";
 import { useEditCabin } from "../../hooks/useEditCabin";
+import { getImageNameFromUrl } from "../../utils/helpers";
 
 function CreateCabinForm({ cabinToEdit = {} }) {
   const { id: editId, ...editValues } = cabinToEdit;
@@ -24,6 +25,9 @@ function CreateCabinForm({ cabinToEdit = {} }) {
   const { isEditing, editCabin } = useEditCabin();
 
   const isWorking = isPending || isEditing;
+
+  const currentImage = getImageNameFromUrl(editValues.image) || false;
+
   function onSubmit(data) {
     const image = typeof data.image === "string" ? data.image : data.image[0];
 
@@ -32,6 +36,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
         {
           newCabinData: { ...data, image },
           id: editId,
+          currentImage,
         },
         { onSuccess: () => reset() }
       );
