@@ -1,10 +1,8 @@
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
-import { deleteCabin } from "../../services/apiCabins";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import { useState } from "react";
 import CreateCabinForm from "./CreateCabinForm";
+import { useDeleteCabin } from "../../hooks/useDeleteCabin";
 
 const TableRow = styled.div`
   display: grid;
@@ -47,19 +45,7 @@ const Discount = styled.div`
 
 export default function CabinRow({ cabin }) {
   const [showForm, setShowForm] = useState(false);
-  const queryClient = useQueryClient();
-
-  const { isPending, mutate } = useMutation({
-    mutationFn: deleteCabin,
-    onSuccess: () => {
-      queryClient.invalidateQueries("cabins");
-      toast.success(`${cabin.name} Cabin deleted`, { icon: "🗑️" });
-    },
-    onError: (error) => {
-      toast.error("An error occurred: " + error.message);
-      console.error(error);
-    },
-  });
+  const { isPending, deleteCabin } = useDeleteCabin({ cabin });
 
   return (
     <>
@@ -68,10 +54,14 @@ export default function CabinRow({ cabin }) {
         <Cabin>{cabin.name}</Cabin>
         <div>Fits up to {cabin.maxCapacity}</div>
         <Price>{formatCurrency(cabin.regularPrice)} kr</Price>
-        <Discount>{formatCurrency(cabin.discount)}%</Discount>
+        {cabin.discount ? (
+          <Discount>{formatCurrency(cabin.discount)}%</Discount>
+        ) : (
+          <span>&mdash;</span>
+        )}
         <div>
           <button onClick={() => setShowForm((show) => !show)}>Edit</button>
-          <button onClick={() => mutate(cabin.id)} disabled={isPending}>
+          <button onClick={() => deleteCabin(cabin.id)} disabled={isPending}>
             Delete
           </button>
         </div>
