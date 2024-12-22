@@ -11,17 +11,12 @@ export async function getCabins() {
   return data;
 }
 
-export async function deleteCabin(id, currentImage) {
-  debugger;
+export async function deleteCabin(id) {
   const { data, error } = await supabase.from("cabins").delete().eq("id", id);
 
   if (error) {
     console.error(error);
     throw new Error("Error deleting cabin");
-  }
-
-  if (currentImage) {
-    await supabase.storage.from("cabin-images").remove([currentImage]);
   }
 
   return data;

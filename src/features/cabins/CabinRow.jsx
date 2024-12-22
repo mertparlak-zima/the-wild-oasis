@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { formatCurrency } from "../../utils/helpers";
+import { formatCurrency, getImageNameFromUrl } from "../../utils/helpers";
 import { useState } from "react";
 import CreateCabinForm from "./CreateCabinForm";
 import { useDeleteCabin } from "../../hooks/useDeleteCabin";
@@ -47,8 +47,9 @@ const Discount = styled.div`
 `;
 
 export default function CabinRow({ cabin }) {
+  const currentImage = getImageNameFromUrl(cabin.image);
   const [showForm, setShowForm] = useState(false);
-  const { isPending, deleteCabin } = useDeleteCabin({ cabin });
+  const { isPending, deleteCabin } = useDeleteCabin({ cabin, currentImage });
   const { isPending: isCreating, createCabin } = useCreateCabin();
 
   function handleDuplicate() {
@@ -87,7 +88,7 @@ export default function CabinRow({ cabin }) {
             <HiPencil />
           </button>
           <button
-            onClick={() => deleteCabin(cabin.id)}
+            onClick={() => deleteCabin(cabin.id, currentImage)}
             disabled={isPending || isCreating}
           >
             <HiTrash />
