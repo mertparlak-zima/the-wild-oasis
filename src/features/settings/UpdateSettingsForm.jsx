@@ -20,6 +20,11 @@ function UpdateSettingsForm() {
     return <Spinner />;
   }
 
+  if (error) {
+    console.error(error);
+    return <div>{error.message}</div>;
+  }
+
   return (
     <Form>
       <FormRow label="Minimum nights/booking">
