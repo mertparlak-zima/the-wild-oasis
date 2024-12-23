@@ -1,4 +1,5 @@
 import { useSettings } from "../../hooks/useSettings";
+import { useUpdateSetting } from "../../hooks/useUpdateSetting";
 import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
@@ -16,6 +17,8 @@ function UpdateSettingsForm() {
     error,
   } = useSettings();
 
+  const { isUpdating, updateSetting } = useUpdateSetting();
+
   if (isPending) {
     return <Spinner />;
   }
@@ -28,16 +31,30 @@ function UpdateSettingsForm() {
   return (
     <Form>
       <FormRow label="Minimum nights/booking">
-        <Input type="number" id="min-nights" defaultValue={minBookingLength} />
+        <Input
+          type="number"
+          id="min-nights"
+          defaultValue={minBookingLength}
+          disabled={isUpdating}
+          onBlur={(e) => updateSetting({ minBookingLength: e.target.value })}
+        />
       </FormRow>
       <FormRow label="Maximum nights/booking">
-        <Input type="number" id="max-nights" defaultValue={MaxBookingLength} />
+        <Input
+          type="number"
+          id="max-nights"
+          defaultValue={MaxBookingLength}
+          disabled={isUpdating}
+          onBlur={(e) => updateSetting({ MaxBookingLength: e.target.value })}
+        />
       </FormRow>
       <FormRow label="Maximum guests/booking">
         <Input
           type="number"
           id="max-guests"
           defaultValue={maxGuestPerBooking}
+          disabled={isUpdating}
+          onBlur={(e) => updateSetting({ maxGuestPerBooking: e.target.value })}
         />
       </FormRow>
       <FormRow label="Breakfast price">
@@ -45,6 +62,8 @@ function UpdateSettingsForm() {
           type="number"
           id="breakfast-price"
           defaultValue={breakfastPrice}
+          disabled={isUpdating}
+          onBlur={(e) => updateSetting({ breakfastPrice: e.target.value })}
         />
       </FormRow>
     </Form>
