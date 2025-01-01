@@ -5,8 +5,6 @@ import { createContext } from "react";
 import { useState } from "react";
 import { useContext } from "react";
 import { cloneElement } from "react";
-import { useEffect } from "react";
-import { useRef } from "react";
 import useOutsideClick from "../hooks/useOutsideClick";
 
 const StyledModal = styled.div`
