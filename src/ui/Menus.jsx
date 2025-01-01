@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useContext } from "react";
 import { createContext } from "react";
-import { createPortal } from "react-dom";
 import { HiEllipsisVertical } from "react-icons/hi2";
 import styled from "styled-components";
 import useOutsideClick from "../hooks/useOutsideClick";
 
 const Menu = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -32,7 +32,8 @@ const StyledToggle = styled.button`
 `;
 
 const StyledList = styled.ul`
-  position: fixed;
+  position: absolute;
+  z-index: 1;
 
   background-color: var(--color-grey-0);
   box-shadow: var(--shadow-md);
@@ -91,8 +92,8 @@ function Toggle({ id }) {
     const rect = e.target.closest("button").getBoundingClientRect();
 
     setPosition({
-      x: window.innerWidth - rect.width - rect.x,
-      y: rect.y + rect.height + 8,
+      x: -8,
+      y: rect.height,
     });
 
     if (openId !== id || openId === "") {
@@ -117,11 +118,10 @@ function List({ children, id }) {
   });
   if (openId !== id) return null;
 
-  return createPortal(
+  return (
     <StyledList ref={ref} position={position}>
       {children}
-    </StyledList>,
-    document.body
+    </StyledList>
   );
 }
 

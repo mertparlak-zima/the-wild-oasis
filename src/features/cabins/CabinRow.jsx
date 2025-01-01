@@ -75,7 +75,7 @@ export default function CabinRow({ cabin }) {
       ) : (
         <span>&mdash;</span>
       )}
-      <div>
+      <div className="relative">
         <Modal>
           <Menus.Menu>
             <Menus.Toggle id={cabin.id} />
