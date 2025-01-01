@@ -5,6 +5,9 @@ import { createContext } from "react";
 import { useState } from "react";
 import { useContext } from "react";
 import { cloneElement } from "react";
+import { useEffect } from "react";
+import { useRef } from "react";
+import useOutsideClick from "../hooks/useOutsideClick";
 
 const StyledModal = styled.div`
   position: fixed;
@@ -72,6 +75,10 @@ export default function Modal({ children }) {
 
 function Window({ children, name }) {
   const { openName, close } = useContext(ModalContext);
+  const ref = useOutsideClick({
+    callBack: close,
+    listenCapturing: true,
+  });
 
   if (openName !== name) return null;
 
@@ -79,7 +86,7 @@ function Window({ children, name }) {
 
   return createPortal(
     <Overlay>
-      <StyledModal>
+      <StyledModal ref={ref}>
         <Button onClick={close}>
           <HiOutlineXMark />
         </Button>
