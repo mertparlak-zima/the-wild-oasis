@@ -87,7 +87,12 @@ function Row({ children }) {
     </StyledRow>
   );
 }
-function Body({ children }) {}
+function Body({ data, handler }) {
+  if (!data.length) {
+    return <Empty>No data available</Empty>;
+  }
+  return <StyledBody>{data.map(handler)}</StyledBody>;
+}
 
 Table.Header = Header;
 Table.Row = Row;
