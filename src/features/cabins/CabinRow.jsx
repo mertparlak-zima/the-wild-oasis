@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { formatCurrency, getImageNameFromUrl } from "../../utils/helpers";
-import { useState } from "react";
 import CreateCabinForm from "./CreateCabinForm";
 import { useDeleteCabin } from "../../hooks/useDeleteCabin";
 import { HiPencil, HiTrash } from "react-icons/hi";
 import { FaCopy } from "react-icons/fa";
 import { useCreateCabin } from "../../hooks/useCreateCabin";
+import Modal from "../../ui/Modal";
 
 const TableRow = styled.div`
   display: grid;
@@ -48,7 +48,6 @@ const Discount = styled.div`
 
 export default function CabinRow({ cabin }) {
   const currentImage = getImageNameFromUrl(cabin.image);
-  const [showForm, setShowForm] = useState(false);
   const { isPending, deleteCabin } = useDeleteCabin({ cabin, currentImage });
   const { isPending: isCreating, createCabin } = useCreateCabin();
 
@@ -63,40 +62,40 @@ export default function CabinRow({ cabin }) {
   }
 
   return (
-    <>
-      <TableRow role="row">
-        <Img src={cabin.image} alt={cabin.name} />
-        <Cabin>{cabin.name}</Cabin>
-        <div>Fits up to {cabin.maxCapacity}</div>
-        <Price>{formatCurrency(cabin.regularPrice)} kr</Price>
-        {cabin.discount ? (
-          <Discount>{formatCurrency(cabin.discount)}%</Discount>
-        ) : (
-          <span>&mdash;</span>
-        )}
-        <div>
-          <button
-            onClick={() => handleDuplicate()}
-            disabled={isCreating || isPending}
-          >
-            <FaCopy />
-          </button>
-          <button
-            onClick={() => setShowForm((show) => !show)}
-            disabled={isPending || isCreating}
-          >
-            <HiPencil />
-          </button>
-          <button
-            onClick={() => deleteCabin(cabin.id, currentImage)}
-            disabled={isPending || isCreating}
-          >
-            <HiTrash />
-          </button>
-        </div>
-      </TableRow>
-
-      {showForm && <CreateCabinForm cabinToEdit={cabin} />}
-    </>
+    <TableRow role="row">
+      <Img src={cabin.image} alt={cabin.name} />
+      <Cabin>{cabin.name}</Cabin>
+      <div>Fits up to {cabin.maxCapacity}</div>
+      <Price>{formatCurrency(cabin.regularPrice)} kr</Price>
+      {cabin.discount ? (
+        <Discount>{formatCurrency(cabin.discount)}%</Discount>
+      ) : (
+        <span>&mdash;</span>
+      )}
+      <div>
+        <button
+          onClick={() => handleDuplicate()}
+          disabled={isCreating || isPending}
+        >
+          <FaCopy />
+        </button>
+        <Modal>
+          <Modal.Open opens="edit">
+            <button disabled={isPending || isCreating}>
+              <HiPencil />
+            </button>
+          </Modal.Open>
+          <Modal.Window name="edit">
+            <CreateCabinForm cabinToEdit={cabin} />
+          </Modal.Window>
+        </Modal>
+        <button
+          onClick={() => deleteCabin(cabin.id, currentImage)}
+          disabled={isPending || isCreating}
+        >
+          <HiTrash />
+        </button>
+      </div>
+    </TableRow>
   );
 }
